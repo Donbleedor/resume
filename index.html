@@ -69,8 +69,11 @@
     .nav-links a { padding: 8px 10px; border-radius: 6px; color: var(--muted); font-size: 13px; transition: color .28s var(--ease), background .28s var(--ease); }
     .nav-links a:hover, .nav-links a:focus-visible { color: var(--ink); background: oklch(100% 0 0 / .07); outline: none; }
     main { position: relative; z-index: 2; }
-    .hero { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 640px); align-items: center; gap: 58px; padding: 128px 6vw 68px; }
-    .hero-copy { max-width: 760px; }
+    .hero { position: relative; isolation: isolate; overflow: hidden; min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 640px); align-items: center; gap: 58px; padding: 128px 6vw 68px; }
+    .hero::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(circle at 18% 28%, oklch(12% 0.025 80 / .58), transparent 34rem), linear-gradient(90deg, oklch(8% 0.012 248 / .78), transparent 66%); }
+    .dot-field { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .84; }
+    .dot-field canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-copy { position: relative; z-index: 2; max-width: 760px; }
     .label { margin: 0 0 18px; color: var(--accent); font-family: Georgia, "Times New Roman", serif; font-size: 17px; }
     h1 { margin: 0; font-family: Georgia, "Times New Roman", "KaiTi", serif; font-size: 78px; line-height: .96; font-weight: 500; text-wrap: balance; }
     .hero-copy > p { max-width: 620px; margin: 26px 0 0; color: var(--muted); font-size: 19px; line-height: 1.75; text-wrap: pretty; }
@@ -80,15 +83,19 @@
     .hero-facts div { border: 1px solid var(--line); padding: 18px; min-height: 96px; background: oklch(100% 0 0 / .035); border-radius: 8px; }
     .hero-facts strong { display: block; color: var(--ink); font-size: 25px; font-weight: 600; }
     .hero-facts span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.45; }
-    .hero-stage { position: relative; height: 720px; min-height: 540px; perspective: 1200px; }
+    .hero-stage { position: relative; z-index: 2; height: 720px; min-height: 540px; perspective: 1200px; }
     .tile-cloud { position: sticky; top: 106px; height: 620px; }
-    .tile-cloud img { position: absolute; width: 48%; max-height: 42%; object-fit: cover; border: 1px solid oklch(100% 0 0 / .18); box-shadow: 0 28px 80px oklch(0% 0 0 / .48); filter: saturate(.96) contrast(1.06); transform: translate3d(calc(var(--tilt-x, 0) * 1px), calc(var(--tilt-y, 0) * 1px), 0) rotate(var(--r)); transition: transform .7s var(--ease), filter .4s var(--ease); }
+    .tile-cloud img { position: absolute; width: 48%; max-height: 42%; object-fit: cover; border: 1px solid oklch(100% 0 0 / .18); box-shadow: 0 28px 80px oklch(0% 0 0 / .48); filter: saturate(.98) contrast(1.06); transform: translate3d(calc(var(--tilt-x, 0) * 1px), calc(var(--tilt-y, 0) * 1px), 0) rotate(var(--r)); transition: transform .7s var(--ease), filter .4s var(--ease), opacity .5s var(--ease); animation: heroTileIn .9s var(--ease) both; }
     .tile-cloud img:nth-child(1) { left: 6%; top: 4%; --r: -3deg; }
-    .tile-cloud img:nth-child(2) { right: 3%; top: 12%; --r: 2deg; }
-    .tile-cloud img:nth-child(3) { left: 14%; top: 36%; --r: 4deg; }
-    .tile-cloud img:nth-child(4) { right: 10%; top: 46%; --r: -2deg; }
-    .tile-cloud img:nth-child(5) { left: 2%; bottom: 2%; --r: 2deg; }
-    .tile-cloud img:nth-child(6) { right: 0; bottom: 0; --r: -4deg; }
+    .tile-cloud img:nth-child(2) { right: 3%; top: 12%; --r: 2deg; animation-delay: .08s; }
+    .tile-cloud img:nth-child(3) { left: 14%; top: 36%; --r: 4deg; animation-delay: .16s; }
+    .tile-cloud img:nth-child(4) { right: 10%; top: 46%; --r: -2deg; animation-delay: .24s; }
+    .tile-cloud img:nth-child(5) { left: 2%; bottom: 2%; --r: 2deg; animation-delay: .32s; }
+    .tile-cloud img:nth-child(6) { right: 0; bottom: 0; --r: -4deg; animation-delay: .4s; }
+    @keyframes heroTileIn {
+      from { opacity: 0; transform: translate3d(calc(var(--tilt-x, 0) * 1px), calc(28px + var(--tilt-y, 0) * 1px), 0) rotate(var(--r)); filter: blur(10px) saturate(.72); }
+      to { opacity: 1; transform: translate3d(calc(var(--tilt-x, 0) * 1px), calc(var(--tilt-y, 0) * 1px), 0) rotate(var(--r)); filter: saturate(.98) contrast(1.06); }
+    }
     .project-section { position: relative; padding: 92px 0; background: linear-gradient(120deg, color-mix(in oklch, var(--shade), transparent 16%), transparent 48%), linear-gradient(180deg, oklch(100% 0 0 / .025), transparent 42%); border-bottom: 1px solid oklch(100% 0 0 / .1); }
     .project-shell { position: relative; display: grid; grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); gap: 42px; width: min(1780px, calc(100% - 8vw)); margin: 0 auto; }
     .project-copy { position: sticky; top: 106px; align-self: start; min-height: 68vh; padding: 28px 0; }
@@ -105,14 +112,20 @@
     .video-frame { margin: 0 0 18px; grid-column: 1 / -1; border: 1px solid color-mix(in oklch, var(--accent), transparent 42%); background: oklch(0% 0 0 / .24); box-shadow: 0 24px 70px oklch(0% 0 0 / .42); border-radius: 8px; overflow: hidden; }
     .video-ratio { position: relative; aspect-ratio: 16 / 9; background: oklch(6% 0.012 248); }
     .video-ratio iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-    .work-frame { margin: 0; border: 1px solid oklch(100% 0 0 / .13); background: linear-gradient(180deg, oklch(100% 0 0 / .07), oklch(0% 0 0 / .12)), color-mix(in oklch, var(--shade), black 18%); box-shadow: 0 18px 46px oklch(0% 0 0 / .34); border-radius: 8px; overflow: hidden; transform: translateY(22px); opacity: .001; transition: transform .7s var(--ease), opacity .7s var(--ease), border-color .3s var(--ease), filter .3s var(--ease); }
+    .work-frame { position: relative; margin: 0; border: 1px solid oklch(100% 0 0 / .13); background: linear-gradient(180deg, oklch(100% 0 0 / .07), oklch(0% 0 0 / .12)), color-mix(in oklch, var(--shade), black 18%); box-shadow: 0 18px 46px oklch(0% 0 0 / .34); border-radius: 8px; overflow: hidden; transform: translateY(22px); opacity: .001; transition: transform .7s var(--ease), opacity .7s var(--ease), border-color .3s var(--ease), filter .3s var(--ease); }
     .work-frame.is-visible { transform: translateY(0); opacity: 1; }
     .work-frame:nth-child(3n+2) { margin-top: 46px; }
-    .image-button { display: block; width: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+    .image-button { position: relative; display: block; width: 100%; padding: 0; border: 0; overflow: hidden; background: linear-gradient(135deg, color-mix(in oklch, var(--shade), black 36%), oklch(7% 0.012 248)); cursor: zoom-in; }
+    .image-button::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .8; background: linear-gradient(110deg, transparent 0%, oklch(100% 0 0 / .08) 44%, transparent 70%); transform: translateX(-100%); animation: imageSweep 1.4s var(--ease) infinite; transition: opacity .4s var(--ease); }
     .image-button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-    .work-frame img { width: 100%; height: auto; object-fit: contain; background: oklch(8% 0.012 248); transition: transform .8s var(--ease), filter .5s var(--ease); }
+    .work-frame img { width: 100%; height: auto; object-fit: contain; background: oklch(8% 0.012 248); opacity: .16; filter: blur(8px) saturate(.75); transition: transform .8s var(--ease), filter .5s var(--ease), opacity .45s var(--ease); }
+    .work-frame.image-ready img { opacity: 1; filter: none; }
+    .work-frame.image-ready .image-button::before { opacity: 0; animation-play-state: paused; }
     .work-frame:hover { border-color: color-mix(in oklch, var(--accent), white 8%); filter: saturate(1.08); }
     .work-frame:hover img { transform: scale(1.025); }
+    @keyframes imageSweep {
+      to { transform: translateX(100%); }
+    }
     figcaption { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; color: var(--muted); font-size: 12px; border-top: 1px solid oklch(100% 0 0 / .08); }
     figcaption strong { color: var(--accent); font-weight: 600; }
     .resume-panel { grid-column: 1 / -1; border: 1px solid color-mix(in oklch, var(--accent), transparent 55%); border-radius: 8px; background: linear-gradient(135deg, oklch(100% 0 0 / .06), oklch(0% 0 0 / .14)); padding: 28px; box-shadow: 0 24px 70px oklch(0% 0 0 / .36); }
@@ -189,6 +202,7 @@
   </nav>
   <main id="top">
     <section class="hero" data-theme="dunhuang">
+      <div class="dot-field" aria-hidden="true"><canvas></canvas></div>
       <div class="hero-copy">
         <p class="label">赵能宏 / 游戏主美作品集</p>
         <h1>Art direction across cultures, systems and live projects.</h1>
@@ -205,11 +219,11 @@
         </div>
         <div class="hero-facts">
           <div><strong>12年</strong><span>游戏美术、原画、UI、动效与团队管理经验</span></div>
-          <div><strong>43</strong><span>精选作品页，覆盖国风、欧美写实、日韩休闲与 PUBGM 资产</span></div>
+          <div><strong>41</strong><span>精选作品页，覆盖国风、欧美写实、日韩休闲与 PUBGM 资产</span></div>
           <div><strong>0-1</strong><span>美术体系搭建、管线规划、品质审核与跨团队协作</span></div>
         </div>
       </div>
-      <div class="hero-stage" aria-hidden="true"><div class="tile-cloud"><img src="assets/embedded/image-001.webp" alt="中国敦煌风主美工作概览 预览" loading="eager"><img src="assets/embedded/image-002.webp" alt="欧美风主美工作概览 预览" loading="eager"><img src="assets/embedded/image-003.webp" alt="PUBG 2D 设计作品 预览" loading="eager"><img src="assets/embedded/image-004.webp" alt="小游戏主美（日韩风） 预览" loading="eager"><img src="assets/embedded/image-005.webp" alt="个人作品集（2017-2020） 预览" loading="eager"><img src="assets/embedded/image-006.webp" alt="中国敦煌风主美工作概览 预览" loading="eager"></div></div>
+      <div class="hero-stage" aria-hidden="true"><div class="tile-cloud"><img src="assets/embedded/image-001.webp" alt="标题作品预览 01" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-002.webp" alt="标题作品预览 02" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-003.webp" alt="标题作品预览 03" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-004.webp" alt="标题作品预览 04" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-005.webp" alt="标题作品预览 05" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-006.webp" alt="标题作品预览 06" loading="eager" decoding="async" fetchpriority="high"></div></div>
     </section>
 
     <section class="project-section theme-resume" id="resume" data-theme="resume" style="--accent:oklch(78% 0.04 95);--accent-2:oklch(65% 0.06 210);--shade:oklch(18% 0.015 240);">
@@ -316,140 +330,140 @@
 
           <figure class="work-frame" data-doc="dunhuang" data-page="01">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 01 页">
-              <img src="assets/embedded/image-008.webp" alt="中国敦煌风主美工作概览 第 01 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-008.webp" alt="中国敦煌风主美工作概览 第 01 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P01</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="02">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 02 页">
-              <img src="assets/embedded/image-009.webp" alt="中国敦煌风主美工作概览 第 02 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-009.webp" alt="中国敦煌风主美工作概览 第 02 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P02</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="03">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 03 页">
-              <img src="assets/embedded/image-010.webp" alt="中国敦煌风主美工作概览 第 03 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-010.webp" alt="中国敦煌风主美工作概览 第 03 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P03</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="04">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 04 页">
-              <img src="assets/embedded/image-011.webp" alt="中国敦煌风主美工作概览 第 04 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-011.webp" alt="中国敦煌风主美工作概览 第 04 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P04</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="05">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 05 页">
-              <img src="assets/embedded/image-012.webp" alt="中国敦煌风主美工作概览 第 05 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-012.webp" alt="中国敦煌风主美工作概览 第 05 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P05</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="06">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 06 页">
-              <img src="assets/embedded/image-013.webp" alt="中国敦煌风主美工作概览 第 06 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-013.webp" alt="中国敦煌风主美工作概览 第 06 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P06</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="07">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 07 页">
-              <img src="assets/embedded/image-014.webp" alt="中国敦煌风主美工作概览 第 07 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-014.webp" alt="中国敦煌风主美工作概览 第 07 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P07</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="08">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 08 页">
-              <img src="assets/embedded/image-015.webp" alt="中国敦煌风主美工作概览 第 08 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-015.webp" alt="中国敦煌风主美工作概览 第 08 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P08</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="09">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 09 页">
-              <img src="assets/embedded/image-016.webp" alt="中国敦煌风主美工作概览 第 09 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-016.webp" alt="中国敦煌风主美工作概览 第 09 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P09</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="10">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 10 页">
-              <img src="assets/embedded/image-017.webp" alt="中国敦煌风主美工作概览 第 10 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-017.webp" alt="中国敦煌风主美工作概览 第 10 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P10</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="11">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 11 页">
-              <img src="assets/embedded/image-018.webp" alt="中国敦煌风主美工作概览 第 11 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-018.webp" alt="中国敦煌风主美工作概览 第 11 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P11</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="12">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 12 页">
-              <img src="assets/embedded/image-019.webp" alt="中国敦煌风主美工作概览 第 12 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-019.webp" alt="中国敦煌风主美工作概览 第 12 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P12</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="13">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 13 页">
-              <img src="assets/embedded/image-020.webp" alt="中国敦煌风主美工作概览 第 13 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-020.webp" alt="中国敦煌风主美工作概览 第 13 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P13</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="14">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 14 页">
-              <img src="assets/embedded/image-021.webp" alt="中国敦煌风主美工作概览 第 14 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-021.webp" alt="中国敦煌风主美工作概览 第 14 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P14</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="15">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 15 页">
-              <img src="assets/embedded/image-022.webp" alt="中国敦煌风主美工作概览 第 15 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-022.webp" alt="中国敦煌风主美工作概览 第 15 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P15</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="16">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 16 页">
-              <img src="assets/embedded/image-023.webp" alt="中国敦煌风主美工作概览 第 16 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-023.webp" alt="中国敦煌风主美工作概览 第 16 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P16</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="17">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 17 页">
-              <img src="assets/embedded/image-024.webp" alt="中国敦煌风主美工作概览 第 17 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-024.webp" alt="中国敦煌风主美工作概览 第 17 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P17</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="18">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 18 页">
-              <img src="assets/embedded/image-025.webp" alt="中国敦煌风主美工作概览 第 18 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-025.webp" alt="中国敦煌风主美工作概览 第 18 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P18</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="19">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 19 页">
-              <img src="assets/embedded/image-026.webp" alt="中国敦煌风主美工作概览 第 19 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-026.webp" alt="中国敦煌风主美工作概览 第 19 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P19</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="dunhuang" data-page="20">
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 20 页">
-              <img src="assets/embedded/image-027.webp" alt="中国敦煌风主美工作概览 第 20 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-027.webp" alt="中国敦煌风主美工作概览 第 20 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P20</strong></figcaption>
           </figure>
@@ -470,35 +484,35 @@
 
           <figure class="work-frame" data-doc="western" data-page="01">
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 01 页">
-              <img src="assets/embedded/image-028.webp" alt="欧美风主美工作概览 第 01 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-028.webp" alt="欧美风主美工作概览 第 01 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P01</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="western" data-page="02">
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 02 页">
-              <img src="assets/embedded/image-029.webp" alt="欧美风主美工作概览 第 02 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-029.webp" alt="欧美风主美工作概览 第 02 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P02</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="western" data-page="03">
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 03 页">
-              <img src="assets/embedded/image-030.webp" alt="欧美风主美工作概览 第 03 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-030.webp" alt="欧美风主美工作概览 第 03 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P03</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="western" data-page="04">
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 04 页">
-              <img src="assets/embedded/image-031.webp" alt="欧美风主美工作概览 第 04 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-031.webp" alt="欧美风主美工作概览 第 04 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P04</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="western" data-page="05">
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 05 页">
-              <img src="assets/embedded/image-032.webp" alt="欧美风主美工作概览 第 05 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-032.webp" alt="欧美风主美工作概览 第 05 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P05</strong></figcaption>
           </figure>
@@ -519,35 +533,35 @@
 
           <figure class="work-frame" data-doc="jpkr" data-page="01">
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 01 页">
-              <img src="assets/embedded/image-033.webp" alt="小游戏主美（日韩风） 第 01 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-033.webp" alt="小游戏主美（日韩风） 第 01 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P01</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="jpkr" data-page="02">
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 02 页">
-              <img src="assets/embedded/image-034.webp" alt="小游戏主美（日韩风） 第 02 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-034.webp" alt="小游戏主美（日韩风） 第 02 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P02</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="jpkr" data-page="03">
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 03 页">
-              <img src="assets/embedded/image-035.webp" alt="小游戏主美（日韩风） 第 03 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-035.webp" alt="小游戏主美（日韩风） 第 03 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P03</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="jpkr" data-page="04">
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 04 页">
-              <img src="assets/embedded/image-036.webp" alt="小游戏主美（日韩风） 第 04 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-036.webp" alt="小游戏主美（日韩风） 第 04 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P04</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="jpkr" data-page="05">
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 05 页">
-              <img src="assets/embedded/image-037.webp" alt="小游戏主美（日韩风） 第 05 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-037.webp" alt="小游戏主美（日韩风） 第 05 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P05</strong></figcaption>
           </figure>
@@ -568,28 +582,28 @@
 
           <figure class="work-frame" data-doc="pubg" data-page="01">
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 01 页">
-              <img src="assets/embedded/image-038.webp" alt="PUBG 2D 设计作品 第 01 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-038.webp" alt="PUBG 2D 设计作品 第 01 页" width="900" height="1208" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P01</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="pubg" data-page="02">
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 02 页">
-              <img src="assets/embedded/image-039.webp" alt="PUBG 2D 设计作品 第 02 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-039.webp" alt="PUBG 2D 设计作品 第 02 页" width="900" height="1689" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P02</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="pubg" data-page="03">
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 03 页">
-              <img src="assets/embedded/image-040.webp" alt="PUBG 2D 设计作品 第 03 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-040.webp" alt="PUBG 2D 设计作品 第 03 页" width="900" height="1096" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P03</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="pubg" data-page="04">
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 04 页">
-              <img src="assets/embedded/image-041.webp" alt="PUBG 2D 设计作品 第 04 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-041.webp" alt="PUBG 2D 设计作品 第 04 页" width="900" height="1507" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P04</strong></figcaption>
           </figure>
@@ -604,71 +618,57 @@
           <h2><span>06</span>个人作品集（2017-2020）</h2>
           <p class="lead">早期个人作品集，包含角色、插画、项目设计和 PUBGM 相关设计作品，是风格广度与基础造型能力的归档。</p>
           <div class="keyword-line"><span>角色立绘</span><span>插画</span><span>项目设计</span><span>早期作品</span><span>风格广度</span></div>
-          <div class="project-stat"><span>9</span><small>精选作品页</small></div>
+          <div class="project-stat"><span>7</span><small>精选作品页</small></div>
         </aside>
         <div class="work-gallery">
 
-          <figure class="work-frame" data-doc="archive" data-page="01">
-            <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 01 页">
-              <img src="assets/embedded/image-042.webp" alt="个人作品集（2017-2020） 第 01 页" loading="lazy" decoding="async">
-            </button>
-            <figcaption><span>个人作品集（2017-2020）</span><strong>P01</strong></figcaption>
-          </figure>
-
           <figure class="work-frame" data-doc="archive" data-page="02">
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 02 页">
-              <img src="assets/embedded/image-043.webp" alt="个人作品集（2017-2020） 第 02 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-042.webp" alt="个人作品集（2017-2020） 第 02 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P02</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="archive" data-page="03">
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 03 页">
-              <img src="assets/embedded/image-044.webp" alt="个人作品集（2017-2020） 第 03 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-043.webp" alt="个人作品集（2017-2020） 第 03 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P03</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="archive" data-page="04">
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 04 页">
-              <img src="assets/embedded/image-045.webp" alt="个人作品集（2017-2020） 第 04 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-044.webp" alt="个人作品集（2017-2020） 第 04 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P04</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="archive" data-page="05">
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 05 页">
-              <img src="assets/embedded/image-046.webp" alt="个人作品集（2017-2020） 第 05 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-045.webp" alt="个人作品集（2017-2020） 第 05 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P05</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="archive" data-page="06">
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 06 页">
-              <img src="assets/embedded/image-047.webp" alt="个人作品集（2017-2020） 第 06 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-046.webp" alt="个人作品集（2017-2020） 第 06 页" width="770" height="1400" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P06</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="archive" data-page="07">
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 07 页">
-              <img src="assets/embedded/image-048.webp" alt="个人作品集（2017-2020） 第 07 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-047.webp" alt="个人作品集（2017-2020） 第 07 页" width="770" height="1400" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P07</strong></figcaption>
           </figure>
 
           <figure class="work-frame" data-doc="archive" data-page="08">
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 08 页">
-              <img src="assets/embedded/image-049.webp" alt="个人作品集（2017-2020） 第 08 页" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-048.webp" alt="个人作品集（2017-2020） 第 08 页" width="770" height="1400" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P08</strong></figcaption>
-          </figure>
-
-          <figure class="work-frame" data-doc="archive" data-page="09">
-            <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 09 页">
-              <img src="assets/embedded/image-050.webp" alt="个人作品集（2017-2020） 第 09 页" loading="lazy" decoding="async">
-            </button>
-            <figcaption><span>个人作品集（2017-2020）</span><strong>P09</strong></figcaption>
           </figure>
         </div>
       </div>
@@ -678,6 +678,164 @@
   <script>
     const root = document.documentElement;
     const themes = {"resume": {"a": "oklch(78% 0.04 95)", "b": "oklch(65% 0.06 210)", "c": "oklch(18% 0.015 240)"}, "dunhuang": {"a": "oklch(78% 0.12 84)", "b": "oklch(54% 0.09 225)", "c": "oklch(31% 0.06 72)"}, "western": {"a": "oklch(66% 0.09 42)", "b": "oklch(45% 0.08 24)", "c": "oklch(23% 0.025 250)"}, "jpkr": {"a": "oklch(78% 0.11 195)", "b": "oklch(76% 0.12 345)", "c": "oklch(24% 0.05 220)"}, "pubg": {"a": "oklch(66% 0.11 118)", "b": "oklch(68% 0.16 50)", "c": "oklch(22% 0.035 118)"}, "archive": {"a": "oklch(72% 0.08 285)", "b": "oklch(68% 0.10 20)", "c": "oklch(21% 0.025 285)"}};
+    
+    function initDotField() {
+      const holder = document.querySelector('.dot-field');
+      const canvas = holder ? holder.querySelector('canvas') : null;
+      if (!holder || !canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const ctx = canvas.getContext('2d', { alpha: true });
+      const opts = {
+        dotRadius: 1.5,
+        dotSpacing: 14,
+        cursorRadius: 500,
+        bulgeStrength: 67,
+        glowRadius: 160,
+        gradientFrom: 'rgba(231, 190, 86, 0.38)',
+        gradientTo: 'rgba(116, 153, 206, 0.24)',
+        glowColor: 'rgba(18, 15, 23, 0.82)'
+      };
+      const dots = [];
+      const mouse = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 };
+      const size = { w: 0, h: 0 };
+      let rect = holder.getBoundingClientRect();
+      let dpr = 1;
+      let raf = 0;
+      let frame = 0;
+      let engagement = 0;
+      let glowOpacity = 0;
+      let resizeTimer = 0;
+
+      function buildDots() {
+        dots.length = 0;
+        const step = opts.dotRadius + opts.dotSpacing;
+        const cols = Math.max(1, Math.floor(size.w / step));
+        const rows = Math.max(1, Math.floor(size.h / step));
+        const padX = (size.w % step) / 2;
+        const padY = (size.h % step) / 2;
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const ax = padX + col * step + step / 2;
+            const ay = padY + row * step + step / 2;
+            dots.push({ ax, ay, sx: ax, sy: ay });
+          }
+        }
+      }
+
+      function resizeNow() {
+        rect = holder.getBoundingClientRect();
+        size.w = rect.width;
+        size.h = rect.height;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.max(1, Math.round(size.w * dpr));
+        canvas.height = Math.max(1, Math.round(size.h * dpr));
+        canvas.style.width = `${size.w}px`;
+        canvas.style.height = `${size.h}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        buildDots();
+      }
+
+      function onResize() {
+        clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(resizeNow, 100);
+      }
+
+      function onPointerMove(event) {
+        rect = holder.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+      }
+
+      function updateMouseSpeed() {
+        const dx = mouse.prevX - mouse.x;
+        const dy = mouse.prevY - mouse.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        mouse.speed += (distance - mouse.speed) * 0.5;
+        if (mouse.speed < 0.001) mouse.speed = 0;
+        mouse.prevX = mouse.x;
+        mouse.prevY = mouse.y;
+      }
+
+      function drawGlow() {
+        if (glowOpacity <= 0.01) return;
+        const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, opts.glowRadius);
+        glow.addColorStop(0, opts.glowColor);
+        glow.addColorStop(1, 'rgba(18, 15, 23, 0)');
+        ctx.globalAlpha = glowOpacity;
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, opts.glowRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      function tick() {
+        frame++;
+        const targetEngagement = Math.min(mouse.speed / 5, 1);
+        engagement += (targetEngagement - engagement) * 0.06;
+        if (engagement < 0.001) engagement = 0;
+        glowOpacity += (engagement - glowOpacity) * 0.08;
+
+        ctx.clearRect(0, 0, size.w, size.h);
+        drawGlow();
+
+        const gradient = ctx.createLinearGradient(0, 0, size.w, size.h);
+        gradient.addColorStop(0, opts.gradientFrom);
+        gradient.addColorStop(1, opts.gradientTo);
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+
+        const crSq = opts.cursorRadius * opts.cursorRadius;
+        for (let i = 0; i < dots.length; i++) {
+          const dot = dots[i];
+          const dx = mouse.x - dot.ax;
+          const dy = mouse.y - dot.ay;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < crSq && engagement > 0.01) {
+            const dist = Math.max(1, Math.sqrt(distSq));
+            const influence = 1 - dist / opts.cursorRadius;
+            const push = influence * influence * opts.bulgeStrength * engagement;
+            const angle = Math.atan2(dy, dx);
+            dot.sx += (dot.ax - Math.cos(angle) * push - dot.sx) * 0.15;
+            dot.sy += (dot.ay - Math.sin(angle) * push - dot.sy) * 0.15;
+          } else {
+            dot.sx += (dot.ax - dot.sx) * 0.1;
+            dot.sy += (dot.ay - dot.sy) * 0.1;
+          }
+
+          ctx.moveTo(dot.sx + opts.dotRadius, dot.sy);
+          ctx.arc(dot.sx, dot.sy, opts.dotRadius, 0, Math.PI * 2);
+        }
+
+        ctx.fill();
+        raf = requestAnimationFrame(tick);
+      }
+
+      resizeNow();
+      const speedTimer = window.setInterval(updateMouseSpeed, 20);
+      const visibilityObserver = new IntersectionObserver((entries) => {
+        const visible = entries.some((entry) => entry.isIntersecting);
+        if (visible && !raf) tick();
+        if (!visible && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      }, { threshold: 0 });
+
+      visibilityObserver.observe(holder);
+      window.addEventListener('resize', onResize);
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      window.addEventListener('beforeunload', () => {
+        clearInterval(speedTimer);
+        clearTimeout(resizeTimer);
+        cancelAnimationFrame(raf);
+        visibilityObserver.disconnect();
+      }, { once: true });
+    }
+    initDotField();
+    
     function updateScroll() {
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       root.style.setProperty('--scroll', (window.scrollY / max).toFixed(4));
@@ -716,6 +874,28 @@
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
     document.querySelectorAll('.work-frame').forEach((frame) => frameObserver.observe(frame));
+    const imageLoadObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const img = entry.target.querySelector('img[data-src]');
+        if (img && img.dataset.src && !img.getAttribute('src')) {
+          img.src = img.dataset.src;
+          img.removeAttribute('data-src');
+        }
+        imageLoadObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '900px 0px', threshold: .01 });
+    document.querySelectorAll('.work-frame').forEach((frame) => imageLoadObserver.observe(frame));
+    document.querySelectorAll('.work-frame img').forEach((img) => {
+      const frame = img.closest('.work-frame');
+      const markReady = () => frame && frame.classList.add('image-ready');
+      if (img.complete && img.naturalWidth > 0) {
+        markReady();
+      } else {
+        img.addEventListener('load', markReady, { once: true });
+        img.addEventListener('error', markReady, { once: true });
+      }
+    });
     const videoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -743,7 +923,12 @@
     document.querySelectorAll('.image-button').forEach((button) => {
       button.addEventListener('click', () => {
         const img = button.querySelector('img');
-        lightboxImg.src = img.currentSrc || img.src;
+        const source = img.currentSrc || img.src || img.dataset.src;
+        if (img.dataset.src && !img.getAttribute('src')) {
+          img.src = img.dataset.src;
+          img.removeAttribute('data-src');
+        }
+        lightboxImg.src = source;
         lightboxImg.alt = img.alt;
         lightbox.classList.add('is-open');
         lightbox.setAttribute('aria-hidden', 'false');
