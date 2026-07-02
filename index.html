@@ -109,13 +109,97 @@
     .project-stat span { color: var(--accent); font-size: 52px; font-family: Georgia, "Times New Roman", serif; line-height: .9; }
     .project-stat small { max-width: 180px; color: var(--muted); font-size: 12px; line-height: 1.35; }
     .work-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+    .theme-puzzle .work-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .border-glow-card {
+      --edge-proximity: 0;
+      --cursor-angle: 45deg;
+      --edge-sensitivity: 28;
+      --color-sensitivity: 48;
+      --border-radius: 8px;
+      --glow-padding: 34px;
+      --cone-spread: 25;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      transform: translate3d(0, 0, 0.01px);
+    }
+    .border-glow-card::before,
+    .border-glow-card::after,
+    .border-glow-card > .edge-light {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: var(--border-radius);
+      pointer-events: none;
+      transition: opacity .25s var(--ease);
+    }
+    .border-glow-card::before {
+      z-index: 0;
+      border: 1px solid transparent;
+      background:
+        linear-gradient(color-mix(in oklch, var(--shade), black 14%) 0 100%) padding-box,
+        radial-gradient(at 80% 55%, color-mix(in oklch, var(--accent), white 14%) 0, transparent 50%) border-box,
+        radial-gradient(at 12% 8%, color-mix(in oklch, var(--accent-2), white 18%) 0, transparent 54%) border-box,
+        radial-gradient(at 44% 38%, oklch(80% 0.13 178) 0, transparent 50%) border-box,
+        radial-gradient(at 84% 16%, oklch(82% 0.15 55) 0, transparent 52%) border-box,
+        linear-gradient(color-mix(in oklch, var(--accent), var(--accent-2) 42%) 0 100%) border-box;
+      opacity: clamp(0, calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity))), .9);
+      mask-image:
+        conic-gradient(
+          from var(--cursor-angle) at center,
+          black calc(var(--cone-spread) * 1%),
+          transparent calc((var(--cone-spread) + 15) * 1%),
+          transparent calc((100 - var(--cone-spread) - 15) * 1%),
+          black calc((100 - var(--cone-spread)) * 1%)
+        );
+    }
+    .border-glow-card::after {
+      z-index: 0;
+      background:
+        radial-gradient(at 80% 55%, color-mix(in oklch, var(--accent), transparent 38%) 0, transparent 52%),
+        radial-gradient(at 18% 12%, color-mix(in oklch, var(--accent-2), transparent 42%) 0, transparent 48%),
+        radial-gradient(at 48% 88%, oklch(82% 0.13 170 / .42) 0, transparent 50%);
+      opacity: clamp(0, calc(.42 * (var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity))), .42);
+      mix-blend-mode: soft-light;
+      mask-image:
+        radial-gradient(ellipse at 50% 50%, black 38%, transparent 70%),
+        conic-gradient(from var(--cursor-angle) at center, transparent 5%, black 15%, black 85%, transparent 95%);
+      mask-composite: intersect;
+    }
+    .border-glow-card > .edge-light {
+      inset: calc(var(--glow-padding) * -1);
+      z-index: 1;
+      opacity: clamp(0, calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity))), 1);
+      mix-blend-mode: plus-lighter;
+      mask-image: conic-gradient(from var(--cursor-angle) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%);
+    }
+    .border-glow-card > .edge-light::before {
+      content: "";
+      position: absolute;
+      inset: var(--glow-padding);
+      border-radius: inherit;
+      box-shadow:
+        inset 0 0 0 1px color-mix(in oklch, var(--accent), white 28%),
+        inset 0 0 8px 0 color-mix(in oklch, var(--accent), transparent 52%),
+        inset 0 0 22px 2px color-mix(in oklch, var(--accent-2), transparent 68%),
+        0 0 3px 0 color-mix(in oklch, var(--accent), white 10%),
+        0 0 18px 2px color-mix(in oklch, var(--accent), transparent 62%),
+        0 0 48px 4px color-mix(in oklch, var(--accent-2), transparent 76%);
+    }
+    .border-glow-card:not(:hover):not(.sweep-active)::before,
+    .border-glow-card:not(:hover):not(.sweep-active)::after,
+    .border-glow-card:not(:hover):not(.sweep-active) > .edge-light {
+      opacity: 0;
+      transition: opacity .75s ease-in-out;
+    }
+    .border-glow-card > :not(.edge-light) { position: relative; z-index: 2; }
     .video-frame { margin: 0 0 18px; grid-column: 1 / -1; border: 1px solid color-mix(in oklch, var(--accent), transparent 42%); background: oklch(0% 0 0 / .24); box-shadow: 0 24px 70px oklch(0% 0 0 / .42); border-radius: 8px; overflow: hidden; }
-    .video-ratio { position: relative; aspect-ratio: 16 / 9; background: oklch(6% 0.012 248); }
+    .video-ratio { position: relative; aspect-ratio: 16 / 9; background: oklch(6% 0.012 248); border-radius: 8px 8px 0 0; overflow: hidden; }
     .video-ratio iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     .work-frame { position: relative; margin: 0; border: 1px solid oklch(100% 0 0 / .13); background: linear-gradient(180deg, oklch(100% 0 0 / .07), oklch(0% 0 0 / .12)), color-mix(in oklch, var(--shade), black 18%); box-shadow: 0 18px 46px oklch(0% 0 0 / .34); border-radius: 8px; overflow: hidden; transform: translateY(22px); opacity: .001; transition: transform .7s var(--ease), opacity .7s var(--ease), border-color .3s var(--ease), filter .3s var(--ease); }
     .work-frame.is-visible { transform: translateY(0); opacity: 1; }
     .work-frame:nth-child(3n+2) { margin-top: 46px; }
-    .image-button { position: relative; display: block; width: 100%; padding: 0; border: 0; overflow: hidden; background: linear-gradient(135deg, color-mix(in oklch, var(--shade), black 36%), oklch(7% 0.012 248)); cursor: zoom-in; }
+    .image-button { position: relative; display: block; width: 100%; padding: 0; border: 0; border-radius: 8px 8px 0 0; overflow: hidden; background: linear-gradient(135deg, color-mix(in oklch, var(--shade), black 36%), oklch(7% 0.012 248)); cursor: zoom-in; }
     .image-button::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .8; background: linear-gradient(110deg, transparent 0%, oklch(100% 0 0 / .08) 44%, transparent 70%); transform: translateX(-100%); animation: imageSweep 1.4s var(--ease) infinite; transition: opacity .4s var(--ease); }
     .image-button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
     .work-frame img { width: 100%; height: auto; object-fit: contain; background: oklch(8% 0.012 248); opacity: .16; filter: blur(8px) saturate(.75); transition: transform .8s var(--ease), filter .5s var(--ease), opacity .45s var(--ease); }
@@ -126,6 +210,24 @@
     @keyframes imageSweep {
       to { transform: translateX(100%); }
     }
+    .puzzle-card { display: flex; flex-direction: column; min-height: 100%; border: 1px solid oklch(100% 0 0 / .13); background: linear-gradient(180deg, oklch(100% 0 0 / .075), oklch(0% 0 0 / .14)), color-mix(in oklch, var(--shade), black 16%); box-shadow: 0 18px 46px oklch(0% 0 0 / .34); border-radius: 8px; transform: translateY(22px); opacity: .001; transition: transform .7s var(--ease), opacity .7s var(--ease), border-color .3s var(--ease), filter .3s var(--ease); }
+    .puzzle-card.is-visible { transform: translateY(0); opacity: 1; }
+    .puzzle-card:nth-child(2) { margin-top: 42px; }
+    .puzzle-card:nth-child(3) { margin-top: 84px; }
+    .puzzle-media { display: grid; place-items: center; min-height: 460px; padding: 22px; border-radius: 8px 8px 0 0; overflow: hidden; background: radial-gradient(circle at 50% 22%, color-mix(in oklch, var(--accent), transparent 84%), transparent 54%), oklch(7% 0.014 248); }
+    .puzzle-media img { width: min(100%, 260px); max-height: 520px; object-fit: contain; opacity: .12; filter: blur(8px) saturate(.8); transition: opacity .45s var(--ease), filter .55s var(--ease), transform .65s var(--ease); }
+    .puzzle-card.image-ready .puzzle-media img { opacity: 1; filter: none; }
+    .puzzle-card:hover .puzzle-media img { transform: scale(1.025); }
+    .puzzle-placeholder { color: color-mix(in oklch, var(--accent), white 12%); border-bottom: 1px solid oklch(100% 0 0 / .08); }
+    .puzzle-placeholder span { display: grid; place-items: center; width: 78px; height: 78px; border: 1px solid color-mix(in oklch, var(--accent), transparent 45%); border-radius: 999px; font-family: Georgia, "Times New Roman", serif; font-size: 22px; }
+    .puzzle-placeholder strong { margin-top: 14px; font-size: 14px; font-weight: 500; color: var(--muted); }
+    .puzzle-copy { padding: 18px 18px 10px; }
+    .puzzle-copy p { margin: 0 0 8px; color: var(--accent); font-size: 12px; }
+    .puzzle-copy h3 { margin: 0; color: var(--ink); font-size: 21px; line-height: 1.15; }
+    .puzzle-copy span { display: block; margin-top: 12px; color: var(--muted); font-size: 13px; line-height: 1.62; }
+    .puzzle-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: auto; padding: 12px 18px; border-top: 1px solid oklch(100% 0 0 / .08); color: var(--muted); }
+    .puzzle-foot small { font-size: 11px; letter-spacing: .06em; }
+    .puzzle-foot strong { color: var(--accent); font-size: 12px; font-weight: 600; }
     figcaption { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; color: var(--muted); font-size: 12px; border-top: 1px solid oklch(100% 0 0 / .08); }
     figcaption strong { color: var(--accent); font-weight: 600; }
     .resume-panel { grid-column: 1 / -1; border: 1px solid color-mix(in oklch, var(--accent), transparent 55%); border-radius: 8px; background: linear-gradient(135deg, oklch(100% 0 0 / .06), oklch(0% 0 0 / .14)); padding: 28px; box-shadow: 0 24px 70px oklch(0% 0 0 / .36); }
@@ -179,8 +281,10 @@
       .project-section { padding: 56px 0; }
       .project-shell { width: calc(100% - 32px); gap: 22px; }
       .project-copy h2 { font-size: 33px; }
-      .work-gallery { grid-template-columns: 1fr; }
+      .work-gallery, .theme-puzzle .work-gallery { grid-template-columns: 1fr; }
       .work-frame:nth-child(3n+2) { margin-top: 0; }
+      .puzzle-card:nth-child(2), .puzzle-card:nth-child(3) { margin-top: 0; }
+      .puzzle-media { min-height: 390px; }
       .resume-panel { padding: 20px; }
       .resume-head, .resume-summary, .resume-grid { grid-template-columns: 1fr; display: grid; }
       .resume-identity { justify-content: space-between; }
@@ -198,7 +302,7 @@
   <div class="progress" aria-hidden="true"></div>
   <nav class="top-nav" aria-label="作品章节">
     <a href="#top" class="brand-mark">ZNH</a>
-    <div class="nav-links"><a href="#resume">个人简历</a><a href="#dunhuang">中国敦煌风主美工作概览</a><a href="#western">欧美风主美工作概览</a><a href="#jpkr">小游戏主美（日韩风）</a><a href="#pubg">PUBG 2D 设计作品</a><a href="#archive">个人作品集（2017-2020）</a></div>
+    <div class="nav-links"><a href="#resume">个人简历</a><a href="#puzzle">休闲消除游戏主美工作概览</a><a href="#dunhuang">中国敦煌风主美工作概览</a><a href="#western">欧美风主美工作概览</a><a href="#jpkr">小游戏主美（日韩风）</a><a href="#pubg">PUBG 2D 设计作品</a><a href="#archive">个人作品集（2017-2020）</a></div>
   </nav>
   <main id="top">
     <section class="hero" data-theme="dunhuang">
@@ -218,9 +322,9 @@
           <span>休闲游戏 / 三消游戏</span>
         </div>
         <div class="hero-facts">
-          <div><strong>12年</strong><span>游戏美术、原画、UI、动效与团队管理经验</span></div>
-          <div><strong>41</strong><span>精选作品页，覆盖国风、欧美写实、日韩休闲与 PUBGM 资产</span></div>
-          <div><strong>0-1</strong><span>美术体系搭建、管线规划、品质审核与跨团队协作</span></div>
+          <div class="border-glow-card"><span class="edge-light" aria-hidden="true"></span><strong>12年</strong><span>游戏美术、原画、UI、动效与团队管理经验</span></div>
+          <div class="border-glow-card"><span class="edge-light" aria-hidden="true"></span><strong>44</strong><span>精选作品页与动效项，覆盖休闲消除、国风、欧美写实、日韩休闲与 PUBGM 资产</span></div>
+          <div class="border-glow-card"><span class="edge-light" aria-hidden="true"></span><strong>0-1</strong><span>美术体系搭建、管线规划、品质审核与跨团队协作</span></div>
         </div>
       </div>
       <div class="hero-stage" aria-hidden="true"><div class="tile-cloud"><img src="assets/embedded/image-001.webp" alt="标题作品预览 01" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-002.webp" alt="标题作品预览 02" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-003.webp" alt="标题作品预览 03" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-004.webp" alt="标题作品预览 04" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-005.webp" alt="标题作品预览 05" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-006.webp" alt="标题作品预览 06" loading="eager" decoding="async" fetchpriority="high"></div></div>
@@ -236,7 +340,8 @@
           <div class="project-stat"><span>HTML</span><small>交互式简历模块</small></div>
         </aside>
         <div class="work-gallery">
-        <div class="resume-panel">
+        <div class="resume-panel border-glow-card">
+          <span class="edge-light" aria-hidden="true"></span>
           <div class="resume-head">
             <div class="resume-identity">
               <div>
@@ -248,7 +353,6 @@
             <div class="resume-contact">
               <span>13183872694</span>
               <span>成都</span>
-              <span>30-40K</span>
             </div>
           </div>
           <div class="resume-summary">
@@ -311,159 +415,226 @@
       </div>
     </section>
 
+    <section class="project-section theme-puzzle" id="puzzle" data-theme="puzzle" style="--accent:oklch(80% 0.14 135);--accent-2:oklch(72% 0.16 310);--shade:oklch(20% 0.045 160);">
+      <div class="project-shell">
+        <aside class="project-copy">
+          <p class="kicker">2025-2026 / Puzzle Game Art Direction</p>
+          <h2><span>02</span>休闲消除游戏主美工作概览</h2>
+          <p class="lead">三款海外休闲消除类游戏，覆盖方块消除、整理归类与泡泡点击方向。重点呈现轻量玩法包装、节奏反馈、移动端识别效率与商业化视觉落地。</p>
+          <div class="keyword-line"><span>休闲消除</span><span>海外市场</span><span>方块玩法</span><span>整理归类</span><span>泡泡点击</span><span>移动端反馈</span></div>
+          <div class="project-stat"><span>3</span><small>海外休闲消除项目</small></div>
+        </aside>
+        <div class="work-gallery">
+          <article class="puzzle-card border-glow-card" data-game="crush-block">
+            <span class="edge-light" aria-hidden="true"></span>
+            <div class="puzzle-media"><img data-src="assets/embedded/image-008.webp" alt="Crush block! 游戏动效" width="228" height="520" loading="lazy" decoding="async"></div>
+            <div class="puzzle-copy">
+              <p>Block puzzle / Overseas casual</p>
+              <h3>Crush block!</h3>
+              <span>面向海外市场的方块消除玩法展示，强调清晰反馈、爽感节奏和轻量商业化包装。</span>
+            </div>
+            <div class="puzzle-foot"><small>ANIMATED WEBP</small><strong>Crush</strong></div>
+          </article>
+
+          <article class="puzzle-card border-glow-card" data-game="tidy-master">
+            <span class="edge-light" aria-hidden="true"></span>
+            <div class="puzzle-media"><img data-src="assets/embedded/image-009.webp" alt="Tidy Master 游戏动效" width="228" height="520" loading="lazy" decoding="async"></div>
+            <div class="puzzle-copy">
+              <p>Sorting puzzle / Casual cleanup</p>
+              <h3>Tidy Master</h3>
+              <span>整理、归类与消除结合的休闲玩法，突出直观操作、物件识别和阶段性成就反馈。</span>
+            </div>
+            <div class="puzzle-foot"><small>ANIMATED WEBP</small><strong>Tidy</strong></div>
+          </article>
+
+          <article class="puzzle-card border-glow-card" data-game="bubblepop-master">
+            <span class="edge-light" aria-hidden="true"></span>
+            <div class="puzzle-media puzzle-placeholder"><span>GIF</span><strong>待补充</strong></div>
+            <div class="puzzle-copy">
+              <p>Bubble pop / Recording pending</p>
+              <h3>Bubblepop Master</h3>
+              <span>预留第三款海外休闲消除游戏动效位，后续录制 GIF 后可直接替换接入。</span>
+            </div>
+            <div class="puzzle-foot"><small>PLACEHOLDER</small><strong>Bubblepop</strong></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="project-section theme-dunhuang" id="dunhuang" data-theme="dunhuang" style="--accent:oklch(78% 0.12 84);--accent-2:oklch(54% 0.09 225);--shade:oklch(31% 0.06 72);">
       <div class="project-shell">
         <aside class="project-copy">
           <p class="kicker">2024-2025 / Silk Road Art Direction</p>
-          <h2><span>02</span>中国敦煌风主美工作概览</h2>
+          <h2><span>03</span>中国敦煌风主美工作概览</h2>
           <p class="lead">以丝绸之路、敦煌壁画、历史科普玩法为核心的国风项目。章节包含游戏理念、贸易与探索玩法、角色立绘、场景原画、剧情原画、玩法包装与沉浸体验。</p>
           <div class="keyword-line"><span>丝路题材</span><span>敦煌色彩</span><span>历史科普</span><span>角色与场景</span><span>玩法包装</span></div>
           <div class="project-stat"><span>20</span><small>精选作品页</small></div>
         </aside>
         <div class="work-gallery">
-          <figure class="video-frame is-visible">
+          <figure class="video-frame border-glow-card is-visible">
+            <span class="edge-light" aria-hidden="true"></span>
             <div class="video-ratio">
               <iframe src="about:blank" data-src="https://player.bilibili.com/player.html?isOutside=true&aid=116834300860070&bvid=BV1EAK96aEbH&cid=39514082339&p=1" title="敦煌风游戏 PV" loading="lazy" scrolling="no" frameborder="0" allowfullscreen="true"></iframe>
             </div>
             <figcaption><span>敦煌风游戏 PV</span><strong>VIDEO</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="01">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="01">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 01 页">
-              <img data-src="assets/embedded/image-008.webp" alt="中国敦煌风主美工作概览 第 01 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-010.webp" alt="中国敦煌风主美工作概览 第 01 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P01</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="02">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="02">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 02 页">
-              <img data-src="assets/embedded/image-009.webp" alt="中国敦煌风主美工作概览 第 02 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-011.webp" alt="中国敦煌风主美工作概览 第 02 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P02</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="03">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="03">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 03 页">
-              <img data-src="assets/embedded/image-010.webp" alt="中国敦煌风主美工作概览 第 03 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-012.webp" alt="中国敦煌风主美工作概览 第 03 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P03</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="04">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="04">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 04 页">
-              <img data-src="assets/embedded/image-011.webp" alt="中国敦煌风主美工作概览 第 04 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-013.webp" alt="中国敦煌风主美工作概览 第 04 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P04</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="05">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="05">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 05 页">
-              <img data-src="assets/embedded/image-012.webp" alt="中国敦煌风主美工作概览 第 05 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-014.webp" alt="中国敦煌风主美工作概览 第 05 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P05</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="06">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="06">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 06 页">
-              <img data-src="assets/embedded/image-013.webp" alt="中国敦煌风主美工作概览 第 06 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-015.webp" alt="中国敦煌风主美工作概览 第 06 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P06</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="07">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="07">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 07 页">
-              <img data-src="assets/embedded/image-014.webp" alt="中国敦煌风主美工作概览 第 07 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-016.webp" alt="中国敦煌风主美工作概览 第 07 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P07</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="08">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="08">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 08 页">
-              <img data-src="assets/embedded/image-015.webp" alt="中国敦煌风主美工作概览 第 08 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-017.webp" alt="中国敦煌风主美工作概览 第 08 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P08</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="09">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="09">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 09 页">
-              <img data-src="assets/embedded/image-016.webp" alt="中国敦煌风主美工作概览 第 09 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-018.webp" alt="中国敦煌风主美工作概览 第 09 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P09</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="10">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="10">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 10 页">
-              <img data-src="assets/embedded/image-017.webp" alt="中国敦煌风主美工作概览 第 10 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-019.webp" alt="中国敦煌风主美工作概览 第 10 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P10</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="11">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="11">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 11 页">
-              <img data-src="assets/embedded/image-018.webp" alt="中国敦煌风主美工作概览 第 11 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-020.webp" alt="中国敦煌风主美工作概览 第 11 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P11</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="12">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="12">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 12 页">
-              <img data-src="assets/embedded/image-019.webp" alt="中国敦煌风主美工作概览 第 12 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-021.webp" alt="中国敦煌风主美工作概览 第 12 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P12</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="13">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="13">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 13 页">
-              <img data-src="assets/embedded/image-020.webp" alt="中国敦煌风主美工作概览 第 13 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-022.webp" alt="中国敦煌风主美工作概览 第 13 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P13</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="14">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="14">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 14 页">
-              <img data-src="assets/embedded/image-021.webp" alt="中国敦煌风主美工作概览 第 14 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-023.webp" alt="中国敦煌风主美工作概览 第 14 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P14</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="15">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="15">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 15 页">
-              <img data-src="assets/embedded/image-022.webp" alt="中国敦煌风主美工作概览 第 15 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-024.webp" alt="中国敦煌风主美工作概览 第 15 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P15</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="16">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="16">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 16 页">
-              <img data-src="assets/embedded/image-023.webp" alt="中国敦煌风主美工作概览 第 16 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-025.webp" alt="中国敦煌风主美工作概览 第 16 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P16</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="17">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="17">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 17 页">
-              <img data-src="assets/embedded/image-024.webp" alt="中国敦煌风主美工作概览 第 17 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-026.webp" alt="中国敦煌风主美工作概览 第 17 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P17</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="18">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="18">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 18 页">
-              <img data-src="assets/embedded/image-025.webp" alt="中国敦煌风主美工作概览 第 18 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-027.webp" alt="中国敦煌风主美工作概览 第 18 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P18</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="19">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="19">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 19 页">
-              <img data-src="assets/embedded/image-026.webp" alt="中国敦煌风主美工作概览 第 19 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-028.webp" alt="中国敦煌风主美工作概览 第 19 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P19</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="dunhuang" data-page="20">
+          <figure class="work-frame border-glow-card" data-doc="dunhuang" data-page="20">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 中国敦煌风主美工作概览 第 20 页">
-              <img data-src="assets/embedded/image-027.webp" alt="中国敦煌风主美工作概览 第 20 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-029.webp" alt="中国敦煌风主美工作概览 第 20 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>中国敦煌风主美工作概览</span><strong>P20</strong></figcaption>
           </figure>
@@ -475,44 +646,49 @@
       <div class="project-shell">
         <aside class="project-copy">
           <p class="kicker">2020-2023 / Golden City</p>
-          <h2><span>03</span>欧美风主美工作概览</h2>
+          <h2><span>04</span>欧美风主美工作概览</h2>
           <p class="lead">Golden City 项目主美工作概览，覆盖登录界面、游戏界面、Google Banner、GUI 规范与场景、原画、动效制作规范。</p>
           <div class="keyword-line"><span>欧美写实</span><span>GUI 规范</span><span>Banner</span><span>动效规范</span><span>资源标准</span></div>
           <div class="project-stat"><span>5</span><small>精选作品页</small></div>
         </aside>
         <div class="work-gallery">
 
-          <figure class="work-frame" data-doc="western" data-page="01">
+          <figure class="work-frame border-glow-card" data-doc="western" data-page="01">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 01 页">
-              <img data-src="assets/embedded/image-028.webp" alt="欧美风主美工作概览 第 01 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-030.webp" alt="欧美风主美工作概览 第 01 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P01</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="western" data-page="02">
+          <figure class="work-frame border-glow-card" data-doc="western" data-page="02">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 02 页">
-              <img data-src="assets/embedded/image-029.webp" alt="欧美风主美工作概览 第 02 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-031.webp" alt="欧美风主美工作概览 第 02 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P02</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="western" data-page="03">
+          <figure class="work-frame border-glow-card" data-doc="western" data-page="03">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 03 页">
-              <img data-src="assets/embedded/image-030.webp" alt="欧美风主美工作概览 第 03 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-032.webp" alt="欧美风主美工作概览 第 03 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P03</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="western" data-page="04">
+          <figure class="work-frame border-glow-card" data-doc="western" data-page="04">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 04 页">
-              <img data-src="assets/embedded/image-031.webp" alt="欧美风主美工作概览 第 04 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-033.webp" alt="欧美风主美工作概览 第 04 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P04</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="western" data-page="05">
+          <figure class="work-frame border-glow-card" data-doc="western" data-page="05">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 欧美风主美工作概览 第 05 页">
-              <img data-src="assets/embedded/image-032.webp" alt="欧美风主美工作概览 第 05 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-034.webp" alt="欧美风主美工作概览 第 05 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>欧美风主美工作概览</span><strong>P05</strong></figcaption>
           </figure>
@@ -524,44 +700,49 @@
       <div class="project-shell">
         <aside class="project-copy">
           <p class="kicker">Mini Game / JP-KR Style</p>
-          <h2><span>04</span>小游戏主美（日韩风）</h2>
+          <h2><span>05</span>小游戏主美（日韩风）</h2>
           <p class="lead">日韩风小游戏方向，包含移动端场景、角色参考、轻量化 UI 与面向商业化投放的视觉表达，并纳入休闲游戏、三消游戏方向标签。</p>
           <div class="keyword-line"><span>日韩风</span><span>小游戏</span><span>休闲游戏</span><span>三消游戏</span><span>移动端</span><span>轻量商业化</span></div>
           <div class="project-stat"><span>5</span><small>精选作品页</small></div>
         </aside>
         <div class="work-gallery">
 
-          <figure class="work-frame" data-doc="jpkr" data-page="01">
+          <figure class="work-frame border-glow-card" data-doc="jpkr" data-page="01">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 01 页">
-              <img data-src="assets/embedded/image-033.webp" alt="小游戏主美（日韩风） 第 01 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-035.webp" alt="小游戏主美（日韩风） 第 01 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P01</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="jpkr" data-page="02">
+          <figure class="work-frame border-glow-card" data-doc="jpkr" data-page="02">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 02 页">
-              <img data-src="assets/embedded/image-034.webp" alt="小游戏主美（日韩风） 第 02 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-036.webp" alt="小游戏主美（日韩风） 第 02 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P02</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="jpkr" data-page="03">
+          <figure class="work-frame border-glow-card" data-doc="jpkr" data-page="03">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 03 页">
-              <img data-src="assets/embedded/image-035.webp" alt="小游戏主美（日韩风） 第 03 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-037.webp" alt="小游戏主美（日韩风） 第 03 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P03</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="jpkr" data-page="04">
+          <figure class="work-frame border-glow-card" data-doc="jpkr" data-page="04">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 04 页">
-              <img data-src="assets/embedded/image-036.webp" alt="小游戏主美（日韩风） 第 04 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-038.webp" alt="小游戏主美（日韩风） 第 04 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P04</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="jpkr" data-page="05">
+          <figure class="work-frame border-glow-card" data-doc="jpkr" data-page="05">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 小游戏主美（日韩风） 第 05 页">
-              <img data-src="assets/embedded/image-037.webp" alt="小游戏主美（日韩风） 第 05 页" width="1200" height="675" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-039.webp" alt="小游戏主美（日韩风） 第 05 页" width="1200" height="675" loading="lazy" decoding="async">
             </button>
             <figcaption><span>小游戏主美（日韩风）</span><strong>P05</strong></figcaption>
           </figure>
@@ -573,37 +754,41 @@
       <div class="project-shell">
         <aside class="project-copy">
           <p class="kicker">Tencent / PUBG Mobile</p>
-          <h2><span>05</span>PUBG 2D 设计作品</h2>
+          <h2><span>06</span>PUBG 2D 设计作品</h2>
           <p class="lead">PUBG 2D 设计作品，聚焦枪械、载具、角色服装、装备皮肤与主题资源，强调从概念到 3D/特效落地的设计准确性。</p>
           <div class="keyword-line"><span>PUBGM</span><span>枪械载具</span><span>服装道具</span><span>IP 监修</span><span>出海项目</span></div>
           <div class="project-stat"><span>4</span><small>精选作品页</small></div>
         </aside>
         <div class="work-gallery">
 
-          <figure class="work-frame" data-doc="pubg" data-page="01">
+          <figure class="work-frame border-glow-card" data-doc="pubg" data-page="01">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 01 页">
-              <img data-src="assets/embedded/image-038.webp" alt="PUBG 2D 设计作品 第 01 页" width="900" height="1208" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-040.webp" alt="PUBG 2D 设计作品 第 01 页" width="900" height="1208" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P01</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="pubg" data-page="02">
+          <figure class="work-frame border-glow-card" data-doc="pubg" data-page="02">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 02 页">
-              <img data-src="assets/embedded/image-039.webp" alt="PUBG 2D 设计作品 第 02 页" width="900" height="1689" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-041.webp" alt="PUBG 2D 设计作品 第 02 页" width="900" height="1689" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P02</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="pubg" data-page="03">
+          <figure class="work-frame border-glow-card" data-doc="pubg" data-page="03">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 03 页">
-              <img data-src="assets/embedded/image-040.webp" alt="PUBG 2D 设计作品 第 03 页" width="900" height="1096" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-042.webp" alt="PUBG 2D 设计作品 第 03 页" width="900" height="1096" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P03</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="pubg" data-page="04">
+          <figure class="work-frame border-glow-card" data-doc="pubg" data-page="04">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 PUBG 2D 设计作品 第 04 页">
-              <img data-src="assets/embedded/image-041.webp" alt="PUBG 2D 设计作品 第 04 页" width="900" height="1507" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-043.webp" alt="PUBG 2D 设计作品 第 04 页" width="900" height="1507" loading="lazy" decoding="async">
             </button>
             <figcaption><span>PUBG 2D 设计作品</span><strong>P04</strong></figcaption>
           </figure>
@@ -615,58 +800,65 @@
       <div class="project-shell">
         <aside class="project-copy">
           <p class="kicker">2017-2020 / Personal Archive</p>
-          <h2><span>06</span>个人作品集（2017-2020）</h2>
+          <h2><span>07</span>个人作品集（2017-2020）</h2>
           <p class="lead">早期个人作品集，包含角色、插画、项目设计和 PUBGM 相关设计作品，是风格广度与基础造型能力的归档。</p>
           <div class="keyword-line"><span>角色立绘</span><span>插画</span><span>项目设计</span><span>早期作品</span><span>风格广度</span></div>
           <div class="project-stat"><span>7</span><small>精选作品页</small></div>
         </aside>
         <div class="work-gallery">
 
-          <figure class="work-frame" data-doc="archive" data-page="02">
+          <figure class="work-frame border-glow-card" data-doc="archive" data-page="02">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 02 页">
-              <img data-src="assets/embedded/image-042.webp" alt="个人作品集（2017-2020） 第 02 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-044.webp" alt="个人作品集（2017-2020） 第 02 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P02</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="archive" data-page="03">
+          <figure class="work-frame border-glow-card" data-doc="archive" data-page="03">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 03 页">
-              <img data-src="assets/embedded/image-043.webp" alt="个人作品集（2017-2020） 第 03 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-045.webp" alt="个人作品集（2017-2020） 第 03 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P03</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="archive" data-page="04">
+          <figure class="work-frame border-glow-card" data-doc="archive" data-page="04">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 04 页">
-              <img data-src="assets/embedded/image-044.webp" alt="个人作品集（2017-2020） 第 04 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-046.webp" alt="个人作品集（2017-2020） 第 04 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P04</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="archive" data-page="05">
+          <figure class="work-frame border-glow-card" data-doc="archive" data-page="05">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 05 页">
-              <img data-src="assets/embedded/image-045.webp" alt="个人作品集（2017-2020） 第 05 页" width="849" height="1200" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-047.webp" alt="个人作品集（2017-2020） 第 05 页" width="849" height="1200" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P05</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="archive" data-page="06">
+          <figure class="work-frame border-glow-card" data-doc="archive" data-page="06">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 06 页">
-              <img data-src="assets/embedded/image-046.webp" alt="个人作品集（2017-2020） 第 06 页" width="770" height="1400" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-048.webp" alt="个人作品集（2017-2020） 第 06 页" width="770" height="1400" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P06</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="archive" data-page="07">
+          <figure class="work-frame border-glow-card" data-doc="archive" data-page="07">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 07 页">
-              <img data-src="assets/embedded/image-047.webp" alt="个人作品集（2017-2020） 第 07 页" width="770" height="1400" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-049.webp" alt="个人作品集（2017-2020） 第 07 页" width="770" height="1400" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P07</strong></figcaption>
           </figure>
 
-          <figure class="work-frame" data-doc="archive" data-page="08">
+          <figure class="work-frame border-glow-card" data-doc="archive" data-page="08">
+            <span class="edge-light" aria-hidden="true"></span>
             <button class="image-button" type="button" aria-label="查看 个人作品集（2017-2020） 第 08 页">
-              <img data-src="assets/embedded/image-048.webp" alt="个人作品集（2017-2020） 第 08 页" width="770" height="1400" loading="lazy" decoding="async">
+              <img data-src="assets/embedded/image-050.webp" alt="个人作品集（2017-2020） 第 08 页" width="770" height="1400" loading="lazy" decoding="async">
             </button>
             <figcaption><span>个人作品集（2017-2020）</span><strong>P08</strong></figcaption>
           </figure>
@@ -677,7 +869,7 @@
   <div class="lightbox" aria-hidden="true"><button type="button" aria-label="关闭预览">×</button><img src="" alt=""></div>
   <script>
     const root = document.documentElement;
-    const themes = {"resume": {"a": "oklch(78% 0.04 95)", "b": "oklch(65% 0.06 210)", "c": "oklch(18% 0.015 240)"}, "dunhuang": {"a": "oklch(78% 0.12 84)", "b": "oklch(54% 0.09 225)", "c": "oklch(31% 0.06 72)"}, "western": {"a": "oklch(66% 0.09 42)", "b": "oklch(45% 0.08 24)", "c": "oklch(23% 0.025 250)"}, "jpkr": {"a": "oklch(78% 0.11 195)", "b": "oklch(76% 0.12 345)", "c": "oklch(24% 0.05 220)"}, "pubg": {"a": "oklch(66% 0.11 118)", "b": "oklch(68% 0.16 50)", "c": "oklch(22% 0.035 118)"}, "archive": {"a": "oklch(72% 0.08 285)", "b": "oklch(68% 0.10 20)", "c": "oklch(21% 0.025 285)"}};
+    const themes = {"resume": {"a": "oklch(78% 0.04 95)", "b": "oklch(65% 0.06 210)", "c": "oklch(18% 0.015 240)"}, "puzzle": {"a": "oklch(80% 0.14 135)", "b": "oklch(72% 0.16 310)", "c": "oklch(20% 0.045 160)"}, "dunhuang": {"a": "oklch(78% 0.12 84)", "b": "oklch(54% 0.09 225)", "c": "oklch(31% 0.06 72)"}, "western": {"a": "oklch(66% 0.09 42)", "b": "oklch(45% 0.08 24)", "c": "oklch(23% 0.025 250)"}, "jpkr": {"a": "oklch(78% 0.11 195)", "b": "oklch(76% 0.12 345)", "c": "oklch(24% 0.05 220)"}, "pubg": {"a": "oklch(66% 0.11 118)", "b": "oklch(68% 0.16 50)", "c": "oklch(22% 0.035 118)"}, "archive": {"a": "oklch(72% 0.08 285)", "b": "oklch(68% 0.10 20)", "c": "oklch(21% 0.025 285)"}};
     
     function initDotField() {
       const holder = document.querySelector('.dot-field');
@@ -850,6 +1042,48 @@
     window.addEventListener('scroll', updateScroll, { passive: true });
     window.addEventListener('resize', updateScroll);
     updateScroll();
+    function getCardEdgeProximity(card, x, y) {
+      const cx = card.offsetWidth / 2;
+      const cy = card.offsetHeight / 2;
+      const dx = x - cx;
+      const dy = y - cy;
+      const kx = dx === 0 ? Infinity : cx / Math.abs(dx);
+      const ky = dy === 0 ? Infinity : cy / Math.abs(dy);
+      return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
+    }
+    function getCardCursorAngle(card, x, y) {
+      const cx = card.offsetWidth / 2;
+      const cy = card.offsetHeight / 2;
+      const dx = x - cx;
+      const dy = y - cy;
+      if (dx === 0 && dy === 0) return 45;
+      let degrees = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+      if (degrees < 0) degrees += 360;
+      return degrees;
+    }
+    document.querySelectorAll('.border-glow-card').forEach((card, index) => {
+      if (index < 8) {
+        card.classList.add('sweep-active');
+        card.style.setProperty('--edge-proximity', '72');
+        card.style.setProperty('--cursor-angle', `${110 + index * 17}deg`);
+        window.setTimeout(() => {
+          card.classList.remove('sweep-active');
+          card.style.setProperty('--edge-proximity', '0');
+        }, 1000 + index * 80);
+      }
+      card.addEventListener('pointermove', (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const edge = getCardEdgeProximity(card, x, y);
+        const angle = getCardCursorAngle(card, x, y);
+        card.style.setProperty('--edge-proximity', (edge * 100).toFixed(3));
+        card.style.setProperty('--cursor-angle', angle.toFixed(3) + 'deg');
+      }, { passive: true });
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--edge-proximity', '0');
+      });
+    });
     window.addEventListener('pointermove', (event) => {
       const x = (event.clientX / window.innerWidth) * 100;
       const y = (event.clientY / window.innerHeight) * 100;
@@ -873,7 +1107,7 @@
         }
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
-    document.querySelectorAll('.work-frame').forEach((frame) => frameObserver.observe(frame));
+    document.querySelectorAll('.work-frame, .puzzle-card').forEach((frame) => frameObserver.observe(frame));
     const imageLoadObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -885,9 +1119,9 @@
         imageLoadObserver.unobserve(entry.target);
       });
     }, { rootMargin: '900px 0px', threshold: .01 });
-    document.querySelectorAll('.work-frame').forEach((frame) => imageLoadObserver.observe(frame));
-    document.querySelectorAll('.work-frame img').forEach((img) => {
-      const frame = img.closest('.work-frame');
+    document.querySelectorAll('.work-frame, .puzzle-card').forEach((frame) => imageLoadObserver.observe(frame));
+    document.querySelectorAll('.work-frame img, .puzzle-card img').forEach((img) => {
+      const frame = img.closest('.work-frame, .puzzle-card');
       const markReady = () => frame && frame.classList.add('image-ready');
       if (img.complete && img.naturalWidth > 0) {
         markReady();
