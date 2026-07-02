@@ -76,6 +76,18 @@
     .hero-copy { position: relative; z-index: 2; max-width: 760px; }
     .label { margin: 0 0 18px; color: var(--accent); font-family: Georgia, "Times New Roman", serif; font-size: 17px; }
     h1 { margin: 0; font-family: Georgia, "Times New Roman", "KaiTi", serif; font-size: 78px; line-height: .96; font-weight: 500; text-wrap: balance; }
+    .blur-text { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .23em; row-gap: .02em; }
+    .blur-text .blur-segment {
+      display: inline-block;
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(-42px);
+      will-change: transform, filter, opacity;
+    }
+    .blur-text.is-visible .blur-segment {
+      animation: blurTextIn .72s cubic-bezier(.2, .75, .15, 1) both;
+      animation-delay: calc(var(--blur-index) * 120ms);
+    }
     .hero-copy > p { max-width: 620px; margin: 26px 0 0; color: var(--muted); font-size: 19px; line-height: 1.75; text-wrap: pretty; }
     .profile-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; max-width: 720px; }
     .profile-strip span { padding: 9px 12px; border: 1px solid color-mix(in oklch, var(--accent), transparent 55%); color: color-mix(in oklch, var(--accent), white 20%); background: oklch(0% 0 0 / .18); border-radius: 6px; font-size: 13px; }
@@ -95,6 +107,11 @@
     @keyframes heroTileIn {
       from { opacity: 0; transform: translate3d(calc(var(--tilt-x, 0) * 1px), calc(28px + var(--tilt-y, 0) * 1px), 0) rotate(var(--r)); filter: blur(10px) saturate(.72); }
       to { opacity: 1; transform: translate3d(calc(var(--tilt-x, 0) * 1px), calc(var(--tilt-y, 0) * 1px), 0) rotate(var(--r)); filter: saturate(.98) contrast(1.06); }
+    }
+    @keyframes blurTextIn {
+      0% { opacity: 0; filter: blur(10px); transform: translateY(-42px); }
+      58% { opacity: .55; filter: blur(5px); transform: translateY(6px); }
+      100% { opacity: 1; filter: blur(0); transform: translateY(0); }
     }
     .project-section { position: relative; padding: 92px 0; background: linear-gradient(120deg, color-mix(in oklch, var(--shade), transparent 16%), transparent 48%), linear-gradient(180deg, oklch(100% 0 0 / .025), transparent 42%); border-bottom: 1px solid oklch(100% 0 0 / .1); }
     .project-shell { position: relative; display: grid; grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); gap: 42px; width: min(1780px, calc(100% - 8vw)); margin: 0 auto; }
@@ -263,6 +280,11 @@
     .lightbox.is-open { display: flex; }
     .lightbox button { position: absolute; top: 22px; right: 24px; width: 44px; height: 44px; border-radius: 6px; border: 1px solid oklch(100% 0 0 / .26); background: oklch(12% 0.012 248); color: var(--ink); font-size: 24px; cursor: pointer; }
     .lightbox img { max-width: min(96vw, 1700px); max-height: 90vh; object-fit: contain; border: 1px solid oklch(100% 0 0 / .18); box-shadow: 0 30px 110px oklch(0% 0 0 / .7); }
+    .contact-footer { position: relative; padding: 82px 6vw 92px; background: linear-gradient(180deg, oklch(7% 0.012 248), oklch(4% 0.01 248)); border-top: 1px solid oklch(100% 0 0 / .1); }
+    .contact-card { width: min(980px, 100%); margin: 0 auto; padding: 28px; border: 1px solid var(--line); border-radius: 8px; background: linear-gradient(135deg, oklch(100% 0 0 / .06), oklch(0% 0 0 / .18)); box-shadow: 0 28px 88px oklch(0% 0 0 / .38); }
+    .contact-card h2 { margin: 6px 0 18px; font-family: Georgia, "Times New Roman", "KaiTi", serif; font-size: clamp(32px, 5vw, 58px); font-weight: 500; color: var(--ink); }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .contact-links a { padding: 10px 13px; border: 1px solid color-mix(in oklch, var(--accent), transparent 50%); border-radius: 6px; color: color-mix(in oklch, var(--accent), white 20%); background: oklch(0% 0 0 / .18); }
     @media (max-width: 1180px) {
       .hero { grid-template-columns: 1fr; padding-top: 116px; }
       .hero-stage { height: 520px; }
@@ -295,6 +317,7 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .blur-text .blur-segment { opacity: 1 !important; filter: none !important; transform: none !important; }
     }
     </style>
 </head>
@@ -309,7 +332,7 @@
       <div class="dot-field" aria-hidden="true"><canvas></canvas></div>
       <div class="hero-copy">
         <p class="label">赵能宏 / 游戏主美作品集</p>
-        <h1>Art direction across cultures, systems and live projects.</h1>
+        <h1 class="blur-text" data-blur-text="Art direction across cultures, systems and live projects.">Art direction across cultures, systems and live projects.</h1>
         <p>现任移动互联 MI 游戏中心业务部主美，深耕游戏美术 12 年；曾任腾讯光子工作室，核心参与《和平精英》《PUBGM》等全球爆款。从一线原画师成长为艺术总监，精通原画、UI、动效全链路，能驾驭欧美写实、国风敦煌与休闲模拟风格，并具备从 0 到 1 搭建美术体系、把控项目全流程的能力。</p>
         <div class="profile-strip">
           <span>电话 13183872694</span>
@@ -319,12 +342,13 @@
           <span>欧美写实</span>
           <span>日韩卡通</span>
           <span>UI/UX</span>
+          <span>AI美术管线搭建</span>
           <span>休闲游戏 / 三消游戏</span>
         </div>
         <div class="hero-facts">
           <div class="border-glow-card"><span class="edge-light" aria-hidden="true"></span><strong>12年</strong><span>游戏美术、原画、UI、动效与团队管理经验</span></div>
           <div class="border-glow-card"><span class="edge-light" aria-hidden="true"></span><strong>44</strong><span>精选作品页与动效项，覆盖休闲消除、国风、欧美写实、日韩休闲与 PUBGM 资产</span></div>
-          <div class="border-glow-card"><span class="edge-light" aria-hidden="true"></span><strong>0-1</strong><span>美术体系搭建、管线规划、品质审核与跨团队协作</span></div>
+          <div class="border-glow-card"><span class="edge-light" aria-hidden="true"></span><strong>美术体系搭建</strong><span>AI管线规划、品质审核与跨团队协作</span></div>
         </div>
       </div>
       <div class="hero-stage" aria-hidden="true"><div class="tile-cloud"><img src="assets/embedded/image-001.webp" alt="标题作品预览 01" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-002.webp" alt="标题作品预览 02" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-003.webp" alt="标题作品预览 03" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-004.webp" alt="标题作品预览 04" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-005.webp" alt="标题作品预览 05" loading="eager" decoding="async" fetchpriority="high"><img src="assets/embedded/image-006.webp" alt="标题作品预览 06" loading="eager" decoding="async" fetchpriority="high"></div></div>
@@ -865,6 +889,17 @@
         </div>
       </div>
     </section>
+    <footer class="contact-footer" id="contact">
+      <div class="contact-card border-glow-card">
+        <span class="edge-light" aria-hidden="true"></span>
+        <p class="label">Contact</p>
+        <h2>个人联系方式</h2>
+        <div class="contact-links">
+          <a href="tel:13183872694">phone 13183872694</a>
+          <a href="mailto:414670382@qq.com">E-mail: 414670382@qq.com</a>
+        </div>
+      </div>
+    </footer>
   </main>
   <div class="lightbox" aria-hidden="true"><button type="button" aria-label="关闭预览">×</button><img src="" alt=""></div>
   <script>
@@ -1042,6 +1077,34 @@
     window.addEventListener('scroll', updateScroll, { passive: true });
     window.addEventListener('resize', updateScroll);
     updateScroll();
+    function initBlurText() {
+      document.querySelectorAll('[data-blur-text]').forEach((element) => {
+        const text = element.dataset.blurText || element.textContent.trim();
+        const words = text.split(/\s+/).filter(Boolean);
+        element.textContent = '';
+        element.setAttribute('aria-label', text);
+        words.forEach((word, index) => {
+          const span = document.createElement('span');
+          span.className = 'blur-segment';
+          span.textContent = word;
+          span.style.setProperty('--blur-index', index);
+          element.appendChild(span);
+        });
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          element.classList.add('is-visible');
+          return;
+        }
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            element.classList.add('is-visible');
+            observer.unobserve(element);
+          });
+        }, { threshold: .1, rootMargin: '0px' });
+        observer.observe(element);
+      });
+    }
+    initBlurText();
     function getCardEdgeProximity(card, x, y) {
       const cx = card.offsetWidth / 2;
       const cy = card.offsetHeight / 2;
